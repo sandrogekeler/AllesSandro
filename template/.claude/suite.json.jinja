@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sandrogekeler/AllesSandro/main/schemas/project.schema.json",
+  "product": {{ project_name | to_json }},
+  "kind": {{ kind | to_json }},
+  "tracking": {{ tracking | to_json }},
+  "roadmap": "agent_docs/ROADMAP.md",
+  "health": {
+    "commands": [
+{%- set cmds = [] %}
+{%- if 'go' in languages %}{% set _ = cmds.extend([("go vet", "go vet ./...", "."), ("go test", "go test ./...", ".")]) %}{% endif %}
+{%- if 'typescript' in languages %}{% set _ = cmds.extend([("typecheck", "pnpm typecheck", frontend_dir), ("lint", "pnpm lint", frontend_dir), ("test", "pnpm test", frontend_dir)]) %}{% endif %}
+{%- if 'python' in languages %}{% set _ = cmds.extend([("pytest", "python3 -m pytest -q", ".")]) %}{% endif %}
+{%- if aislop %}{% set _ = cmds.extend([("aislop", "npx --yes aislop@0.16.0 ci", ".")]) %}{% endif %}
+{%- set _ = cmds.extend([("template conflicts", "! git grep -nE '^(<<<<<<< before updating|>>>>>>> after updating)$'", ".")]) %}
+{%- for name, run, cwd in cmds %}
+      {
+        "name": {{ name | to_json }},
+        "run": {{ run | to_json }}{% if cwd != '.' %},
+        "cwd": {{ cwd | to_json }}{% endif %}
+      }{{ "," if not loop.last }}
+{%- endfor %}
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Claude Code local settings
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Copier leftovers
+*.rej
+{%- if 'go' in languages %}
+
+# Go
+/bin/
+*.test
+*.out
+{%- endif %}
+{%- if 'typescript' in languages %}
+
+# Node
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+{%- endif %}
+{%- if 'python' in languages %}
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+{%- endif %}
+{%- if kind == 'wails-desktop' %}
+
+# Wails
+build/bin/
+{%- endif %}

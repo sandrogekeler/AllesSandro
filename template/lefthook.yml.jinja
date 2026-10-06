@@ -1,0 +1,26 @@
+# Project-owned (seeded from AllesSandro). Install once with `lefthook install`.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: no template conflicts
+      run: "! git grep -nE '^(<<<<<<< before updating|>>>>>>> after updating)$' -- {staged_files}"
+{%- if 'go' in languages %}
+    - name: go format
+      glob: "*.go"
+      run: gofmt -w {staged_files}
+      stage_fixed: true
+    - name: go vet
+      glob: "*.go"
+      run: go vet ./...
+{%- endif %}
+{%- if 'typescript' in languages %}
+    - name: format
+      root: "{{ '' if frontend_dir == '.' else frontend_dir ~ '/' }}"
+      glob: "*.{ts,tsx,js,css}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+    - name: lint
+      root: "{{ '' if frontend_dir == '.' else frontend_dir ~ '/' }}"
+      glob: "*.{ts,tsx}"
+      run: pnpm exec eslint {staged_files}
+{%- endif %}

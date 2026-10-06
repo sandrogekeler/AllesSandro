@@ -1,0 +1,25 @@
+{
+  "$comment": [
+    "Read by .github/scripts/release-notes.py (locked, from AllesSandro).",
+    "Project-owned: list the path prefixes whose changes do not reach users.",
+    "A pull request touching only these is counted in the notes' footer,",
+    "not listed."
+  ],
+  "nonAppPaths": [
+    ".claude/",
+    ".github/",
+    ".aislop/",
+    ".copier-answers.yml",
+    ".gitattributes",
+    ".gitignore",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "agent_docs/",
+    "docs/",
+    "lefthook.yml",
+    "renovate.json"
+  ]
+}

@@ -1,0 +1,33 @@
+# Contributing to {{ project_name }}
+
+## Pull requests
+
+- One concern per pull request.
+- The title becomes release-notes copy: imperative, sentence case, no trailing
+  period, no em dashes. Say what changed for a user, not which files moved.
+- Label every pull request with one `type:` and at least one `area:` label. The
+  `pr-labelled` status stays pending until both are on.
+
+### Which `type:` label
+
+Ask in order and stop at the first yes:
+
+1. Can a user tell the difference? If not, it is `type:chore`, or `type:docs`
+   when only documentation changed.
+2. Was the project already meant to do this and not doing it? `type:bug`.
+3. Otherwise `type:feature`.
+
+The revert test settles most arguments: imagine the change reverted. Something
+is broken again: bug. Something they never had is gone: feature. They cannot
+tell: chore.
+
+## Checks
+
+Run `python3 .claude/suite-check.py` before opening a pull request. CI runs
+CodeQL, Scorecard, the label gate and the template guard on every pull request.
+
+## Template-managed files
+
+Some files come from [AllesSandro](https://github.com/sandrogekeler/AllesSandro)
+and are updated by Renovate PRs; see `agent_docs/CLAUDE.md`, "Files that come
+from the template".

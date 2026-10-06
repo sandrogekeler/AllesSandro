@@ -1,0 +1,30 @@
+# {{ project_name }}: health checklist
+
+What "healthy" means for this repo, in four parts. `python3 .claude/suite-check.py`
+runs the mechanical half from `.claude/suite.json`; this file is the half that
+needs judgement. Add an item when a real problem teaches you one, with the
+issue or PR that taught it.
+
+## 1. Clean
+
+- [ ] Every health command in `.claude/suite.json` passes, none skipped.
+- [ ] No dead code, commented-out blocks or TODOs without an issue number.
+- [ ] Generated files are regenerated, never hand-edited.
+
+## 2. Stable
+
+- [ ] Errors are handled or deliberately propagated, never silently dropped.
+- [ ] Tests cover the behaviour a user relies on, not only the happy path.
+
+## 3. Scalable / future-proof
+
+- [ ] Architecture rules in `agent_docs/CLAUDE.md` still describe the code.
+- [ ] Dependencies are recorded in `agent_docs/DEPENDENCIES.md`.
+
+## 4. Performant
+
+- [ ] TODO: the budgets that matter here (bundle size, startup, memory).
+
+## Open backlog
+
+Findings not yet fixed, each with an issue link.

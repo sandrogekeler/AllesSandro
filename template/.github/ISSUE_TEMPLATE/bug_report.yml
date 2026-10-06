@@ -1,0 +1,31 @@
+name: Bug report
+description: Something that should work does not.
+labels: ['type:bug']
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release, commit or build you saw it on.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      render: text
