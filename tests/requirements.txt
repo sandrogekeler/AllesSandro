@@ -1,0 +1,4 @@
+copier==9.18.2
+check-jsonschema==0.38.2
+actionlint-py==1.7.12.25
+PyYAML==6.0.1

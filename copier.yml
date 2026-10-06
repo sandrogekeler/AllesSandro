@@ -1,0 +1,114 @@
+# AllesSandro: the Copier template every sandrogekeler project is created from
+# and kept up to date with. See README.md for the model and docs/ for the rules.
+#
+#   new repo:       copier copy --trust gh:sandrogekeler/AllesSandro <dir>
+#   later updates:  Renovate opens a PR when a new vX.Y.Z tag is pushed here,
+#                   or run `copier update --skip-answered --defaults` yourself.
+
+_min_copier_version: "9.4.0"
+_subdirectory: template
+_answers_file: .copier-answers.yml
+_templates_suffix: .jinja
+
+# Seeded tier: written on the first copy, then owned by the project. An update
+# never touches these again, so a project is free to rewrite them. Everything
+# else under template/ is the locked tier and is re-applied on every update; a
+# local edit to a locked file surfaces as a merge conflict (docs/updating.md).
+_skip_if_exists:
+  - README.md
+  - CLAUDE.md
+  - CONTRIBUTING.md
+  - SECURITY.md
+  - .gitignore
+  - .gitattributes
+  - lefthook.yml
+  - renovate.json
+  - .aislopignore
+  - .prettierignore
+  - .aislop/config.yml
+  - agent_docs/**
+  - .claude/settings.json
+  - .claude/suite.json
+  - .claude/rules/dependencies.md
+  - .github/dependabot.yml
+  - .github/labels.json
+  - .github/changelog.json
+  - .github/pull_request_template.md
+  - .github/ISSUE_TEMPLATE/**
+
+project_name:
+  type: str
+  help: Human-readable project name
+  validator: "{% if not project_name.strip() %}Required{% endif %}"
+
+repo_name:
+  type: str
+  help: GitHub repository name
+  default: "{{ project_name | replace(' ', '-') }}"
+
+owner:
+  type: str
+  help: GitHub owner (user or organization)
+  default: sandrogekeler
+
+description:
+  type: str
+  help: One-line description
+  default: ""
+
+kind:
+  type: str
+  help: What kind of project is this?
+  choices:
+    Wails desktop app (Go + web frontend): wails-desktop
+    Web app (Vite / TypeScript): vite-web
+    Go CLI or service: go-service
+    Python tool or service: python-service
+    Static website: static-site
+    Library: library
+    Other: other
+  default: other
+
+languages:
+  type: str
+  help: Languages in the tree (drives CodeQL, Dependabot and the health checks)
+  multiselect: true
+  choices:
+    Go: go
+    TypeScript / JavaScript: typescript
+    Python: python
+  default: >-
+    {%- if kind == 'wails-desktop' -%}[go, typescript]
+    {%- elif kind in ['vite-web', 'static-site'] -%}[typescript]
+    {%- elif kind == 'go-service' -%}[go]
+    {%- elif kind == 'python-service' -%}[python]
+    {%- else -%}[]{%- endif -%}
+
+frontend_dir:
+  type: str
+  help: Directory holding package.json (use . for the repo root)
+  default: "{{ 'frontend' if kind == 'wails-desktop' else '.' }}"
+  when: "{{ 'typescript' in languages }}"
+
+tracking:
+  type: str
+  help: Where work is tracked
+  choices:
+    GitHub Issues: github-issues
+    Linear: linear
+  default: github-issues
+
+aislop:
+  type: bool
+  help: Gate PRs with aislop (AI-slop / quality scanner)?
+  default: true
+
+claude_action:
+  type: bool
+  help: Add the @claude GitHub Action (needs an ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN secret)?
+  default: true
+
+release_notes:
+  type: bool
+  help: Generate release notes from PR labels (adds the release-notes script)?
+  default: "{{ kind in ['wails-desktop', 'go-service', 'library'] }}"

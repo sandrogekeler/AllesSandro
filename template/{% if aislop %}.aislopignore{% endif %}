@@ -1,0 +1,13 @@
+# Paths aislop does not score. Same glob semantics as its `exclude`.
+
+# Locked files from AllesSandro. AllesSandro holds them to the same gate, so a
+# finding here is a finding against the template; a local fix would only turn
+# into a merge conflict on the next update.
+.claude/suite-check.py
+.claude/suite-probe.py
+.claude/suite-memory.py
+.github/scripts/release-notes.py
+
+# Build output
+dist
+node_modules

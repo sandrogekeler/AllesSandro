@@ -1,0 +1,12 @@
+# This repo's aislop config. The policy is base.yml beside it (locked, from
+# AllesSandro). Only this tree's numbers live here. Run locally with
+# `npx --yes aislop@0.16.0 scan`; CI runs the locked .github/workflows/aislop.yml.
+#
+# The `./` is load-bearing: aislop resolves `extends` relative to this file.
+extends: ./base.yml
+
+quality:
+  # A ratchet, not a target: hold each number at today's largest function or
+  # file so the gate is green, then lower it as they shrink. Never raise it.
+  maxFunctionLoc: 80
+  maxFileLoc: 400

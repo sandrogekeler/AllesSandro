@@ -1,0 +1,37 @@
+# AllesSandro's own CI: renders the template for every project kind, validates
+# the output, and simulates a template update over a locally edited project.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - run: pip install -r tests/requirements.txt
+      - name: Template tests
+        run: tests/test_template.sh
+      # The runner's tests load it as a sibling module, so they run beside a
+      # copy of it rather than being vendored into every project.
+      - name: Vendored runner self-tests
+        run: |
+          t=$(mktemp -d)
+          cp template/.claude/suite-*.py tests/suite-check_test.py "$t"/
+          python3 "$t/suite-check_test.py"
