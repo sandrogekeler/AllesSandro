@@ -9,6 +9,7 @@
 {%- set cmds = [] %}
 {%- if 'go' in languages %}{% set _ = cmds.extend([("go vet", "go vet ./...", "."), ("go test", "go test ./...", ".")]) %}{% endif %}
 {%- if 'typescript' in languages %}{% set _ = cmds.extend([("typecheck", "pnpm typecheck", frontend_dir), ("lint", "pnpm lint", frontend_dir), ("test", "pnpm test", frontend_dir)]) %}{% endif %}
+{%- if 'java' in languages %}{% set _ = cmds.extend([("gradle build", "./gradlew build --console=plain", ".")]) %}{% endif %}
 {%- if 'python' in languages %}{% set _ = cmds.extend([("pytest", "python3 -m pytest -q", ".")]) %}{% endif %}
 {%- if aislop %}{% set _ = cmds.extend([("aislop", "npx --yes aislop@0.16.0 ci", ".")]) %}{% endif %}
 {%- set _ = cmds.extend([("template conflicts", "! git grep -nE '^(<<<<<<< before updating|>>>>>>> after updating)$'", ".")]) %}

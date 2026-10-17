@@ -13,7 +13,7 @@ name: template-guard
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [{{ default_branch }}]
 
 permissions:
   contents: read

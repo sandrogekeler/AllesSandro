@@ -4,13 +4,17 @@
 #
 # The language matrix is rendered from this repo's `languages` answer in
 # .copier-answers.yml. GitHub Actions workflows are always scanned.
+#
+# Rendered only when the `public` answer is true: on a private repository code
+# scanning needs GitHub Advanced Security, so the analysis would run and its
+# upload be refused. Making the repo public is `copier update --data public=true`.
 name: CodeQL
 
 on:
   push:
-    branches: [main]
+    branches: [{{ default_branch }}]
   pull_request:
-    branches: [main]
+    branches: [{{ default_branch }}]
   schedule:
     - cron: '36 14 * * 0'
 
@@ -39,6 +43,12 @@ jobs:
 {%- endif %}
 {%- if 'typescript' in languages %}
           - language: javascript-typescript
+            build-mode: none
+{%- endif %}
+{%- if 'java' in languages %}
+          # Without a build: no Gradle setup on the runner, and Java only
+          # (Kotlin needs a build).
+          - language: java-kotlin
             build-mode: none
 {%- endif %}
           # The vendored .claude/ runner is Python, so Python is always scanned.

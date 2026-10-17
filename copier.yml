@@ -66,6 +66,7 @@ kind:
     Python tool or service: python-service
     Static website: static-site
     Library: library
+    Minecraft mod (Java / Gradle): minecraft-mod
     Other: other
   default: other
 
@@ -77,11 +78,13 @@ languages:
     Go: go
     TypeScript / JavaScript: typescript
     Python: python
+    Java (Gradle): java
   default: >-
     {%- if kind == 'wails-desktop' -%}[go, typescript]
     {%- elif kind in ['vite-web', 'static-site'] -%}[typescript]
     {%- elif kind == 'go-service' -%}[go]
     {%- elif kind == 'python-service' -%}[python]
+    {%- elif kind == 'minecraft-mod' -%}[java]
     {%- else -%}[]{%- endif -%}
 
 frontend_dir:
@@ -89,6 +92,19 @@ frontend_dir:
   help: Directory holding package.json (use . for the repo root)
   default: "{{ 'frontend' if kind == 'wails-desktop' else '.' }}"
   when: "{{ 'typescript' in languages }}"
+
+default_branch:
+  type: str
+  help: The repository's default branch (workflows run on pushes to it)
+  default: main
+  validator: "{% if not default_branch.strip() %}Required{% endif %}"
+
+public:
+  type: bool
+  help: >-
+    Is the repository public? CodeQL and Scorecard are added only for a public
+    one: on a private repository both need GitHub Advanced Security
+  default: true
 
 tracking:
   type: str
