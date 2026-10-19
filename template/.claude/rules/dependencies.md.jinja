@@ -12,7 +12,7 @@ paths:
   - "pyproject.toml"
   - "requirements*.txt"
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if ('java' in languages or 'kotlin' in languages) %}
   - "**/build.gradle"
   - "**/build.gradle.kts"
   - "settings.gradle*"

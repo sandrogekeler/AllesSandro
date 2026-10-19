@@ -45,7 +45,7 @@ check_project() { # dir
 }
 
 echo "== render every kind"
-for kind in wails-desktop vite-web go-service python-service static-site library minecraft-mod other; do
+for kind in wails-desktop vite-web android-app go-service python-service static-site library minecraft-mod other; do
   render "$kind" -d kind="$kind"
   check_project "$WORK/out/$kind"
   echo "ok  $kind"
@@ -66,6 +66,15 @@ grep -q 'javascript-typescript' "$WORK/out/vite-web/.github/workflows/codeql.yml
 grep -q 'language: java-kotlin' "$WORK/out/minecraft-mod/.github/workflows/codeql.yml" || fail "java missing"
 grep -q 'package-ecosystem: gradle' "$WORK/out/minecraft-mod/.github/dependabot.yml" || fail "gradle dependabot missing"
 grep -q './gradlew build' "$WORK/out/minecraft-mod/.claude/suite.json" || fail "gradle health command missing"
+grep -q 'build-mode: autobuild' "$WORK/out/android-app/.github/workflows/codeql.yml" || fail "kotlin not built for codeql"
+if grep -q 'java-kotlin' "$WORK/out/go-service/.github/workflows/codeql.yml"; then fail "go-service scans kotlin"; fi
+grep -q 'package-ecosystem: gradle' "$WORK/out/android-app/.github/dependabot.yml" || fail "android-app has no gradle updates"
+grep -q './gradlew build' "$WORK/out/android-app/.claude/suite.json" || fail "android-app has no gradle health check"
+[ ! -e "$WORK/out/android-app/.github/workflows/aislop.yml" ] || fail "android-app gates on aislop by default"
+render jvm -d kind=other -d 'languages=[java, kotlin]'
+check_project "$WORK/out/jvm"
+[ "$(grep -c 'package-ecosystem: gradle' "$WORK/out/jvm/.github/dependabot.yml")" = 1 ] || fail "java and kotlin both add a gradle entry"
+[ "$(grep -c 'language: java-kotlin' "$WORK/out/jvm/.github/workflows/codeql.yml")" = 1 ] || fail "java and kotlin both add a codeql row"
 echo "ok  matrix"
 
 echo "== private repo, other default branch"

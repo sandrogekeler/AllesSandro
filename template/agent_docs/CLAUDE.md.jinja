@@ -21,6 +21,9 @@ frontmatter instead, so they load only when those files are touched. -->
 {%- if 'java' in languages %}
 - Java, Gradle (wrapper at the repo root)
 {%- endif %}
+{%- if 'kotlin' in languages %}
+- Kotlin, Gradle (Kotlin DSL, versions in `gradle/libs.versions.toml`)
+{%- endif %}
 - TODO: frameworks and versions that matter
 
 ## Project structure
@@ -47,7 +50,7 @@ pnpm typecheck && pnpm lint && pnpm test
 {%- if 'python' in languages %}
 python3 -m pytest -q
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if ('java' in languages or 'kotlin' in languages) %}
 ./gradlew build
 {%- endif %}
 python3 .claude/suite-check.py   # every health check in .claude/suite.json

@@ -28,9 +28,9 @@ the reason, so the same discussion does not happen twice.
 |---|---|
 | | |
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if ('java' in languages or 'kotlin' in languages) %}
 
-### Gradle (build scripts and `gradle.properties`)
+### Gradle (build scripts, `gradle/libs.versions.toml`, `gradle.properties`)
 
 | Dependency | Why |
 |---|---|

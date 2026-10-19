@@ -62,6 +62,7 @@ kind:
   choices:
     Wails desktop app (Go + web frontend): wails-desktop
     Web app (Vite / TypeScript): vite-web
+    Android app (Kotlin, Gradle): android-app
     Go CLI or service: go-service
     Python tool or service: python-service
     Static website: static-site
@@ -79,12 +80,14 @@ languages:
     TypeScript / JavaScript: typescript
     Python: python
     Java (Gradle): java
+    Kotlin (Gradle): kotlin
   default: >-
     {%- if kind == 'wails-desktop' -%}[go, typescript]
     {%- elif kind in ['vite-web', 'static-site'] -%}[typescript]
     {%- elif kind == 'go-service' -%}[go]
     {%- elif kind == 'python-service' -%}[python]
     {%- elif kind == 'minecraft-mod' -%}[java]
+    {%- elif kind == 'android-app' -%}[kotlin]
     {%- else -%}[]{%- endif -%}
 
 frontend_dir:
@@ -117,7 +120,9 @@ tracking:
 aislop:
   type: bool
   help: Gate PRs with aislop (AI-slop / quality scanner)?
-  default: true
+  # aislop does not analyse Kotlin or Java and withholds the score for a tree
+  # that is mostly those, so the gate would pass without reading the code.
+  default: "{{ kind != 'android-app' }}"
 
 claude_action:
   type: bool
@@ -127,4 +132,4 @@ claude_action:
 release_notes:
   type: bool
   help: Generate release notes from PR labels (adds the release-notes script)?
-  default: "{{ kind in ['wails-desktop', 'go-service', 'library'] }}"
+  default: "{{ kind in ['wails-desktop', 'android-app', 'go-service', 'library'] }}"
