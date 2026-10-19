@@ -42,6 +42,19 @@ updates:
         patterns: ['*']
         update-types: [minor, patch]
 {%- endif %}
+{%- if 'java' in languages %}
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
+    labels: ['type:chore', 'area:build']
+    open-pull-requests-limit: 3
+    groups:
+      gradle:
+        patterns: ['*']
+        update-types: [minor, patch]
+{%- endif %}
 {%- if 'python' in languages %}
   - package-ecosystem: pip
     directory: /

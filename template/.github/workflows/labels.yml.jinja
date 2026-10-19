@@ -12,7 +12,7 @@ name: labels
 
 on:
   push:
-    branches: [main]
+    branches: [{{ default_branch }}]
     paths: ['.github/labels.json']
   workflow_dispatch:
 
@@ -34,8 +34,8 @@ jobs:
           persist-credentials: false
       - name: Apply .github/labels.json
         env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ '{{' }} github.token {{ '}}' }}
+          REPO: ${{ '{{' }} github.repository {{ '}}' }}
         run: |
           jq -c '.labels[]' .github/labels.json | while read -r l; do
             name=$(jq -r .name <<<"$l"); color=$(jq -r .color <<<"$l"); desc=$(jq -r '.description // ""' <<<"$l")

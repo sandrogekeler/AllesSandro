@@ -8,7 +8,7 @@ name: aislop
 
 on:
   push:
-    branches: [main]
+    branches: [{{ default_branch }}]
   pull_request:
 
 # The job reads the tree and nothing else, so the token gets only that.

@@ -45,7 +45,7 @@ check_project() { # dir
 }
 
 echo "== render every kind"
-for kind in wails-desktop vite-web go-service python-service static-site library other; do
+for kind in wails-desktop vite-web go-service python-service static-site library minecraft-mod other; do
   render "$kind" -d kind="$kind"
   check_project "$WORK/out/$kind"
   echo "ok  $kind"
@@ -63,7 +63,21 @@ echo "== codeql matrix follows languages"
 grep -q 'language: go' "$WORK/out/go-service/.github/workflows/codeql.yml" || fail "go missing"
 if grep -q 'javascript-typescript' "$WORK/out/go-service/.github/workflows/codeql.yml"; then fail "go-service scans TS"; fi
 grep -q 'javascript-typescript' "$WORK/out/vite-web/.github/workflows/codeql.yml" || fail "TS missing"
+grep -q 'language: java-kotlin' "$WORK/out/minecraft-mod/.github/workflows/codeql.yml" || fail "java missing"
+grep -q 'package-ecosystem: gradle' "$WORK/out/minecraft-mod/.github/dependabot.yml" || fail "gradle dependabot missing"
+grep -q './gradlew build' "$WORK/out/minecraft-mod/.claude/suite.json" || fail "gradle health command missing"
 echo "ok  matrix"
+
+echo "== private repo, other default branch"
+render private -d kind=static-site -d public=false -d default_branch=master
+check_project "$WORK/out/private"
+for f in .github/workflows/codeql.yml .github/workflows/scorecard.yml; do
+  [ ! -e "$WORK/out/private/$f" ] || fail "private should not have $f"
+done
+if grep -rn 'branches: \[main\]' "$WORK/out/private/.github/workflows"; then fail "private still names main"; fi
+grep -q 'branches: \[master\]' "$WORK/out/private/.github/workflows/template-guard.yml" || fail "branch not rendered"
+grep -q 'branches: \[main\]' "$WORK/out/go-service/.github/workflows/codeql.yml" || fail "default branch is not main"
+echo "ok  private"
 
 echo "== update: locked conflicts, seeded untouched, guard trips"
 P="$WORK/out/go-service"
@@ -72,7 +86,7 @@ sed -i "s/cron: '36 14 \* \* 0'/cron: '0 3 * * 1'/" "$P/.github/workflows/codeql
 echo "local roadmap note" >> "$P/agent_docs/ROADMAP.md"
 git -C "$P" commit -qam local
 
-sed -i "s/cron: '36 14 \* \* 0'/cron: '15 2 * * 0'/" "$WORK/tpl/template/.github/workflows/codeql.yml.jinja"
+sed -i "s/cron: '36 14 \* \* 0'/cron: '15 2 * * 0'/" "$WORK/tpl/template/.github/workflows/{% if public %}codeql.yml{% endif %}.jinja"
 echo "- [ ] template-only item" >> "$WORK/tpl/template/agent_docs/ROADMAP.md.jinja"
 git -C "$WORK/tpl" commit -qam "test change" && git -C "$WORK/tpl" tag v0.0.2
 

@@ -3,6 +3,8 @@
 #
 # OpenSSF Scorecard: scores the repo's supply-chain hygiene (pinned actions,
 # token permissions, branch protection) and uploads the result to code scanning.
+# Rendered only for a public repository: the action supports a private one only
+# with GitHub Advanced Security (scorecard-action's README).
 name: Scorecard
 
 on:
@@ -12,7 +14,7 @@ on:
   schedule:
     - cron: '30 5 * * 0'
   push:
-    branches: [main]
+    branches: [{{ default_branch }}]
 
 # Read-only by default, and widened only on the job that needs it. Scorecard's
 # own check for exactly this pattern is why the file is written this way.

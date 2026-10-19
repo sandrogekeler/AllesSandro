@@ -40,6 +40,12 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 {%- endif %}
+{%- if 'java' in languages %}
+
+# Gradle
+.gradle/
+build/
+{%- endif %}
 {%- if kind == 'wails-desktop' %}
 
 # Wails
