@@ -45,7 +45,12 @@ jobs:
           - language: javascript-typescript
             build-mode: none
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if 'kotlin' in languages %}
+          # Build mode none leaves Kotlin files out of the database entirely;
+          # Kotlin is only analysed by a build.
+          - language: java-kotlin
+            build-mode: autobuild
+{%- elif 'java' in languages %}
           # Without a build: no Gradle setup on the runner, and Java only
           # (Kotlin needs a build).
           - language: java-kotlin

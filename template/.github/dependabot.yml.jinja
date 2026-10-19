@@ -42,7 +42,7 @@ updates:
         patterns: ['*']
         update-types: [minor, patch]
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if ('java' in languages or 'kotlin' in languages) %}
   - package-ecosystem: gradle
     directory: /
     schedule:

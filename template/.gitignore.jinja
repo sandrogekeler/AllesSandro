@@ -16,6 +16,9 @@ CLAUDE.local.md
 
 # Copier leftovers
 *.rej
+
+# Bytecode from the .claude/ health runner, which every project runs
+__pycache__/
 {%- if 'go' in languages %}
 
 # Go
@@ -34,17 +37,30 @@ coverage/
 {%- if 'python' in languages %}
 
 # Python
-__pycache__/
 *.py[cod]
 .venv/
 .pytest_cache/
 .ruff_cache/
 {%- endif %}
-{%- if 'java' in languages %}
+{%- if ('java' in languages or 'kotlin' in languages) %}
 
 # Gradle
 .gradle/
 build/
+{%- endif %}
+{%- if 'kotlin' in languages %}
+.kotlin/
+{%- endif %}
+{%- if kind == 'android-app' %}
+
+# Android
+local.properties
+captures/
+.cxx/
+*.apk
+*.aab
+*.jks
+*.keystore
 {%- endif %}
 {%- if kind == 'wails-desktop' %}
 
