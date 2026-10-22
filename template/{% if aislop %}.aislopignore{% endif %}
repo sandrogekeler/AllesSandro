@@ -7,6 +7,7 @@
 .claude/suite-probe.py
 .claude/suite-memory.py
 .github/scripts/release-notes.py
+.github/scripts/changelog-section.py
 
 # Build output
 dist

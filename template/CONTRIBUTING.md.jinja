@@ -2,13 +2,24 @@
 
 ## Pull requests
 
-- One concern per pull request.
-- The title becomes release-notes copy: imperative, sentence case, no trailing
-  period, no em dashes. Say what changed for a user, not which files moved.
-- Label every pull request with one `type:` and at least one `area:` label. The
-  `pr-labelled` status stays pending until both are on.
+- One pull request per piece of work, not one per tweak. Split only when a
+  part is risky on its own, has to be revertable on its own, or ships at a
+  different time.
+- List the changes in the body's `## Changelog` section, one `- type: text`
+  line each. The types are `feature`, `fix` (or `bug`), `chore`, `docs` and
+  `skip`; `chore` and `docs` lines are counted in the release notes rather
+  than listed.
+- A pull request with no section is one change: its `type:` label files it
+  and its title is its line. The `pr-labelled` status passes it with a warning
+  that the notes will use the title.
+- Changelog lines and titles become release-notes copy: imperative, sentence
+  case, no trailing period, no em dashes. Say what changed for a user, not
+  which files moved.
+- Label every pull request with at least one `area:` label. The `pr-labelled`
+  status stays pending until it has that and either a Changelog section or a
+  `type:` label.
 
-### Which `type:` label
+### Which type
 
 Ask in order and stop at the first yes:
 
