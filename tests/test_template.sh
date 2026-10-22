@@ -57,6 +57,11 @@ check_project "$WORK/out/bare"
 for f in .github/workflows/aislop.yml .github/workflows/claude.yml .aislop .aislopignore .github/scripts/release-notes.py .github/changelog.json; do
   [ ! -e "$WORK/out/bare/$f" ] || fail "bare should not have $f"
 done
+# The gate reads a Changelog section with this parser whether or not the
+# project generates release notes, so it ships either way.
+[ -f "$WORK/out/bare/.github/scripts/changelog-section.py" ] || fail "bare has no changelog-section.py"
+out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
+[ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
 echo "ok  bare"
 
 echo "== codeql matrix follows languages"
