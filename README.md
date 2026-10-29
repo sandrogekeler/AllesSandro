@@ -14,7 +14,7 @@ change here → tag vX.Y.Z → Renovate opens "Update AllesSandro template" PRs 
 
 | Tier | What | On a template update |
 |---|---|---|
-| **Locked** | `.claude/suite-*.py`, `.github/workflows/{pr-labelled,labels,template-guard}.yml`, `codeql.yml` and `scorecard.yml` on a public repo, optional `aislop.yml`, `claude.yml`, `.aislop/base.yml`, `.github/scripts/release-notes.py`, `.github/scripts/changelog-section.py`, `.claude/rules/template-files.md` | Re-applied. A local edit is kept but shows as a merge conflict ([docs/updating.md](docs/updating.md)). |
+| **Locked** | `.claude/suite-*.py`, `.github/workflows/{pr-labelled,labels,template-guard}.yml`, `codeql.yml` and `scorecard.yml` on a public repo, optional `aislop.yml`, `claude.yml`, `.aislop/base.yml`, `.github/scripts/release-notes.py`, `.github/scripts/changelog-section.py`, `.claude/rules/template-files.md`, `.claude/rules/writing.md` | Re-applied. A local edit is kept but shows as a merge conflict ([docs/updating.md](docs/updating.md)). |
 | **Seeded** | `CLAUDE.md`, `agent_docs/*`, `.claude/settings.json`, `.claude/suite.json`, `.github/{dependabot.yml,labels.json,…}`, README, CONTRIBUTING, SECURITY, ignores, `lefthook.yml`, `renovate.json` | Created once, then owned by the project. Never touched again. |
 
 The list of seeded paths is `_skip_if_exists` in [`copier.yml`](copier.yml).
