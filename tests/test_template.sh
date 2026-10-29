@@ -60,6 +60,7 @@ done
 # The gate reads a Changelog section with this parser whether or not the
 # project generates release notes, so it ships either way.
 [ -f "$WORK/out/bare/.github/scripts/changelog-section.py" ] || fail "bare has no changelog-section.py"
+[ -f "$WORK/out/bare/.claude/rules/writing.md" ] || fail "bare has no writing rule"
 out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
 [ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
 echo "ok  bare"
