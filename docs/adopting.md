@@ -13,6 +13,8 @@ Requires `pipx install copier` (or `pip install copier`), version 9.4 or later.
 4. One-time repo settings (GitHub has no account-wide defaults for these on a
    personal account):
    - Install the [Renovate app](https://github.com/apps/renovate) on the repo.
+     Installed for "All repositories", Mend runs it in Silent mode, which opens
+     no PRs: set the repo to Interactive at developer.mend.io.
    - Add a ruleset on the default branch requiring `pr-labelled`, `template-guard` and
      `renovate/artifacts` (rulesets are free on public repos).
    - Turn on private vulnerability reporting, secret scanning and push protection.
