@@ -35,3 +35,7 @@ jobs:
           t=$(mktemp -d)
           cp template/.claude/suite-*.py tests/suite-check_test.py "$t"/
           python3 "$t/suite-check_test.py"
+      # Mend-hosted Renovate stops at an invalid config without opening an
+      # issue, so an invalid seeded renovate.json fails silently downstream.
+      - name: Renovate config
+        run: npx --yes --package renovate@44.188.2 renovate-config-validator --strict template/renovate.json
