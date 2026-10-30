@@ -19,6 +19,7 @@ _skip_if_exists:
   - CLAUDE.md
   - CONTRIBUTING.md
   - SECURITY.md
+  - LICENSE
   - .gitignore
   - .gitattributes
   - lefthook.yml
@@ -108,6 +109,26 @@ public:
     Is the repository public? CodeQL and Scorecard are added only for a public
     one: on a private repository both need GitHub Advanced Security
   default: true
+
+# Updates run with --defaults, which answers a new question with its default,
+# so the default must be none: an update never licenses a project by itself.
+# LICENSE is seeded, so a project's own licence is never overwritten.
+license:
+  type: str
+  help: Licence for the code (None keeps all rights reserved)
+  choices:
+    None (all rights reserved): none
+    MIT: MIT
+    0BSD (no notice required): 0BSD
+    Apache-2.0: Apache-2.0
+    GPL-3.0 (only): GPL-3.0-only
+  default: none
+
+copyright_holder:
+  type: str
+  help: Name on the licence's copyright line
+  default: Alessandro Gekeler
+  when: "{{ license in ['MIT', '0BSD'] }}"
 
 tracking:
   type: str

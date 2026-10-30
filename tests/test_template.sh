@@ -63,7 +63,24 @@ done
 [ -f "$WORK/out/bare/.claude/rules/writing.md" ] || fail "bare has no writing rule"
 out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
 [ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
+[ ! -e "$WORK/out/bare/LICENSE" ] || fail "bare has a LICENSE without choosing one"
 echo "ok  bare"
+
+echo "== licence"
+render mit -d kind=other -d license=MIT
+[ "$(head -1 "$WORK/out/mit/LICENSE")" = "MIT License" ] || fail "MIT LICENSE heading"
+grep -qx 'Copyright (c) Alessandro Gekeler' "$WORK/out/mit/LICENSE" || fail "MIT copyright line"
+render zero -d kind=other -d license=0BSD -d copyright_holder="Someone Else"
+[ "$(head -1 "$WORK/out/zero/LICENSE")" = "BSD Zero Clause License" ] || fail "0BSD LICENSE heading"
+grep -qx 'Copyright (c) Someone Else' "$WORK/out/zero/LICENSE" || fail "0BSD copyright line"
+render apache -d kind=other -d license=Apache-2.0
+[ "$(head -1 "$WORK/out/apache/LICENSE")" = "                                 Apache License" ] || fail "Apache LICENSE heading"
+render gpl -d kind=other -d license=GPL-3.0-only
+[ "$(head -1 "$WORK/out/gpl/LICENSE")" = "                    GNU GENERAL PUBLIC LICENSE" ] || fail "GPL LICENSE heading"
+for l in mit zero apache gpl; do
+  if grep -q '{{\|{%\|\[fullname\]' "$WORK/out/$l/LICENSE"; then fail "$l LICENSE has a placeholder left"; fi
+done
+echo "ok  licence"
 
 echo "== codeql matrix follows languages"
 grep -q 'language: go' "$WORK/out/go-service/.github/workflows/codeql.yml" || fail "go missing"
@@ -112,5 +129,14 @@ if grep -q 'template-only item' "$P/agent_docs/ROADMAP.md"; then fail "seeded fi
 grep -q '_commit: v0.0.2' "$P/.copier-answers.yml" || fail "answers not bumped"
 if ! (cd "$P" && git grep -qnE '^(<<<<<<< before updating|>>>>>>> after updating)$'); then fail "guard regex misses markers"; fi
 echo "ok  update"
+
+echo "== update: a project's LICENSE is kept"
+L="$WORK/out/mit"
+git -C "$L" init -q && git -C "$L" add -A && git -C "$L" commit -qm init
+echo "local licence note" >> "$L/LICENSE"
+git -C "$L" commit -qam local
+(cd "$L" && copier update -q --skip-answered --defaults --vcs-ref v0.0.2 >/dev/null 2>&1) || true
+grep -q 'local licence note' "$L/LICENSE" || fail "update overwrote LICENSE"
+echo "ok  licence kept"
 
 echo "all template tests passed"
