@@ -5,9 +5,10 @@ Requires `pipx install copier` (or `pip install copier`), version 9.4 or later.
 ## A new repo
 
 1. Create the empty repo on GitHub and clone it.
-2. In it: `copier copy --trust gh:sandrogekeler/AllesSandro .` and answer the
+2. In it: `copier copy --trust https://github.com/sandrogekeler/AllesSandro.git .` and answer the
    questions. `--trust` is not needed today (the template runs no tasks) but is
-   harmless.
+   harmless. Use the full URL, not `gh:`: Copier records it as `_src_path`,
+   and Renovate cannot look up tags for the `gh:` shorthand.
 3. Commit everything, including `.copier-answers.yml`, and push to the default
    branch.
 4. One-time repo settings (GitHub has no account-wide defaults for these on a
