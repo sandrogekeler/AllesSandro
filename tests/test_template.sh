@@ -61,6 +61,7 @@ done
 # project generates release notes, so it ships either way.
 [ -f "$WORK/out/bare/.github/scripts/changelog-section.py" ] || fail "bare has no changelog-section.py"
 [ -f "$WORK/out/bare/.claude/rules/writing.md" ] || fail "bare has no writing rule"
+[ -f "$WORK/out/bare/.claude/rules/typography.md" ] || fail "bare has no typography rule"
 out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
 [ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
 [ ! -e "$WORK/out/bare/LICENSE" ] || fail "bare has a LICENSE without choosing one"
