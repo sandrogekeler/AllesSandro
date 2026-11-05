@@ -1,0 +1,82 @@
+# Locked: comes from sandrogekeler/AllesSandro and is re-applied by every
+# template update. Change it there, not here (AllesSandro docs/updating.md).
+#
+# An issue form applies only the static `labels:` in its front matter. The
+# priority dropdown lands as text in the body, so this job reads it back out and
+# applies the p* label it means. An issue opened through the API has no form
+# answer; when it also has no p* label, the job comments instead of guessing.
+# It runs on `opened` only, so it never fights a maintainer who later changes
+# the label.
+name: Issue priority
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  priority:
+    runs-on: ubuntu-latest
+    steps:
+      # The issue body reaches the script through env, never a ${{ }} inside
+      # `run:`: it is text a stranger wrote.
+      - name: Apply the chosen priority, or say that none was
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          LABELS: ${{ toJSON(github.event.issue.labels.*.name) }}
+          BODY: ${{ github.event.issue.body }}
+          # Must match the dropdown's `label:` in .github/ISSUE_TEMPLATE/*.yml.
+          HEADING: 'How urgent is this for you?'
+          # Leading word of each dropdown option, and the label it means.
+          PRIORITY_MAP: |
+            Blocking: p1
+            Significant: p2
+            Minor: p3
+          RUBRIC_URL: https://github.com/sandrogekeler/AllesSandro/blob/main/docs/conventions.md#priority
+          MARKER: '<!-- allessandro:priority -->'
+        run: |
+          set -euo pipefail
+
+          if printf '%s' "$LABELS" | jq -e 'any(.[]; test("^p[0-3]$"))' > /dev/null; then
+            echo "already carries a priority label"
+            exit 0
+          fi
+
+          # The answer is the first non-blank line under the heading.
+          answer="$(printf '%s\n' "$BODY" | tr -d '\r' | awk -v h="### $HEADING" '
+            $0 == h { found = 1; next }
+            found && NF { print; exit }
+          ')"
+
+          label=''
+          while read -r key value; do
+            [ -n "$key" ] || continue
+            case "$answer" in
+              "$key"*) label="$value"; break ;;
+            esac
+          done <<< "$PRIORITY_MAP"
+
+          if [ -n "$label" ]; then
+            gh issue edit "$NUMBER" --repo "$REPO" --add-label "$label"
+            echo "applied $label"
+            exit 0
+          fi
+
+          if gh issue view "$NUMBER" --repo "$REPO" --json comments \
+            --jq '.comments[].body' | grep -qF "$MARKER"; then
+            echo "already flagged"
+            exit 0
+          fi
+
+          gh issue comment "$NUMBER" --repo "$REPO" --body "$(cat <<EOF
+          $MARKER
+          This issue has no priority label.
+
+          Every issue carries exactly one of \`p0\`, \`p1\`, \`p2\` or \`p3\`. Pick one against the [rubric]($RUBRIC_URL). If it is genuinely unclear, use \`p2\`.
+          EOF
+          )"
+          echo "flagged for triage"

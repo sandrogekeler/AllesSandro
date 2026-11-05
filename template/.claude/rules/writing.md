@@ -16,3 +16,22 @@ own conventions.
   "Note that", "It's worth noting".
 - Delete any sentence the reader would not miss.
 - No em dashes.
+
+## Copy a user reads
+
+On websites, in docs and in apps: say what the thing is, once, and stop.
+
+- A label names the thing. No code glyphs or accent colour on a label, and no
+  single word in a headline coloured for emphasis.
+- A headline says what is there, not a slogan: "Scheduler", not "Automate
+  everything".
+- No line that explains the layout: no subtitle beside a heading, no sentence
+  telling the reader what they are about to see. A control that explains
+  itself, like a search bar, stands alone.
+- Header facts are fixed per kind of page, and few. A fact that does not apply
+  to every page of its kind does not belong in the header.
+- A fact's label is a plain noun, its value a number and unit: "Duration
+  ~20 min", not "Takes about twenty minutes". The same fact carries the same
+  label on every page.
+- One sentence per line in prose. A line that wraps to leave one or two words
+  gets a shorter sentence, not a wider box.

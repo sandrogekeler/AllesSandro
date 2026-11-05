@@ -61,6 +61,11 @@ done
 # project generates release notes, so it ships either way.
 [ -f "$WORK/out/bare/.github/scripts/changelog-section.py" ] || fail "bare has no changelog-section.py"
 [ -f "$WORK/out/bare/.claude/rules/writing.md" ] || fail "bare has no writing rule"
+[ -f "$WORK/out/bare/.claude/rules/simplicity.md" ] || fail "bare has no simplicity rule"
+[ -f "$WORK/out/bare/.github/workflows/issue-priority.yml" ] || fail "bare has no issue-priority workflow"
+for f in "$WORK"/out/bare/.github/ISSUE_TEMPLATE/{bug_report,feature_request}.yml; do
+  grep -q "label: How urgent is this for you?" "$f" || fail "$f has no priority question"
+done
 out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
 [ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
 [ ! -e "$WORK/out/bare/LICENSE" ] || fail "bare has a LICENSE without choosing one"
