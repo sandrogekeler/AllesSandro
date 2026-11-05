@@ -66,6 +66,7 @@ done
 for f in "$WORK"/out/bare/.github/ISSUE_TEMPLATE/{bug_report,feature_request}.yml; do
   grep -q "label: How urgent is this for you?" "$f" || fail "$f has no priority question"
 done
+[ -f "$WORK/out/bare/.claude/rules/typography.md" ] || fail "bare has no typography rule"
 out=$(printf '## Changelog\n- fix: One\n- bgu: Two\n' | python3 -I "$WORK/out/bare/.github/scripts/changelog-section.py")
 [ "$out" = '{"entries": [["fix", "One"]], "errors": ["line 2: unknown type '"'"'bgu'"'"'"]}' ] || fail "changelog-section.py parsed: $out"
 [ ! -e "$WORK/out/bare/LICENSE" ] || fail "bare has a LICENSE without choosing one"

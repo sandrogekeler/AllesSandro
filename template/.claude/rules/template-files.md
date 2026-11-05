@@ -10,6 +10,7 @@ paths:
   - ".github/scripts/changelog-section.py"
   - ".claude/rules/writing.md"
   - ".claude/rules/simplicity.md"
+  - ".claude/rules/typography.md"
 ---
 
 # Files that come from AllesSandro
