@@ -9,6 +9,7 @@ paths:
   - ".github/scripts/release-notes.py"
   - ".github/scripts/changelog-section.py"
   - ".claude/rules/writing.md"
+  - ".claude/rules/simplicity.md"
   - ".claude/rules/typography.md"
 ---
 
