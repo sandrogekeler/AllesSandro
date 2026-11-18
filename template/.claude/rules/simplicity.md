@@ -12,6 +12,12 @@ Code is the smallest thing that does today's job.
   reaches goes in the change that orphaned it.
 - A comment says why, never what the line beneath it says. An error or log
   line states the failure; advice goes in the docs.
+- Before changing a function, find every caller, test and config it reaches.
+  Fix a bug once, in the shared code.
+- New logic with a branch, loop, parser or data write gets one small test.
+- A known limit gets a comment: `shortcut: <the limit>, <when to revisit>`.
+- Never cut for size: input validation, data-loss handling, security,
+  accessibility.
 
 A name is a noun phrase, a message is a sentence or two, and the reason goes in
 the comment, the tooltip or the docs.

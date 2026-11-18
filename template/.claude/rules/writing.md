@@ -16,6 +16,7 @@ own conventions.
   "Note that", "It's worth noting".
 - Delete any sentence the reader would not miss.
 - No em dashes.
+- A reply after a code change ends with one line on what was not checked.
 
 ## Copy a user reads
 

@@ -101,8 +101,9 @@ unattended sessions.
 
 `.claude/rules/simplicity.md` also loads in every session: the code limits (no
 abstraction with one user, no unused option, no second way, no code without a
-caller) and the wording limits (test names 60 characters, scanned labels 20,
-inline messages 140). The numbers are the convention; a project gates them with
+caller, every caller reached, a test for new logic, `shortcut:` comments for
+known limits, and what is never cut for size) and the wording limits (test
+names 60 characters, scanned labels 20, inline messages 140). The numbers are the convention; a project gates them with
 its own tests where it has the surface.
 
 Docs describe what is on disk, in the present tense. Intent goes in the roadmap.
