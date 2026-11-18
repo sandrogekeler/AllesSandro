@@ -1,3 +1,12 @@
+---
+paths:
+  - "**/*.{css,scss,html,svg}"
+  - "**/*.{jsx,tsx,vue,svelte,astro}"
+  - "**/*.{woff,woff2,ttf,otf}"
+  - "**/fonts/**"
+  - "**/brand/**"
+---
+
 # Typography
 
 A guideline, not a mandate: no project font is prescribed. When choosing one:
