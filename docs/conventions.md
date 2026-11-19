@@ -92,7 +92,8 @@ it either way.
 ~200 lines, per Claude Code's guidance). Path-specific guidance goes in
 `.claude/rules/*.md` with `paths:` frontmatter so it loads only when relevant.
 `.claude/rules/writing.md` has no `paths:`, so it loads in every session: it
-sets how anything written for a reader reads. `.claude/rules/typography.md`
+sets how anything written for a reader reads. Copy users see leaves out how
+things work; developer docs may explain it. `.claude/rules/typography.md`
 loads only with style, markup, font and brand files: it names the fonts and type
 treatments to avoid, and mandates no font.
 Anything an agent must always see is a file in the repo, not a plugin:
