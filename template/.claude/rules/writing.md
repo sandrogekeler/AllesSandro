@@ -4,17 +4,18 @@ Applies to everything written for a reader: UI text, docs, READMEs, issue and
 pull request bodies, release notes, replies. Code comments follow the code's
 own conventions.
 
-- Write what was asked for and stop. No extra sections, subtitles, info boxes,
-  tips, notes or summaries to fill space.
-- A title needs no subtitle that restates it. A clear control needs no helper
-  text.
-- No consequence tails: drop ", so ...", ", therefore ...", ", which means ..."
-  and "This means ..." when they restate what the sentence already implies.
-- No intros or wrap-ups: "In this section", "Overall", "In summary",
-  "Note that", "It's worth noting".
-- Delete any sentence the reader would not miss.
+- Write what was asked for and stop. Delete any sentence the reader would
+  not miss: extra sections, tips, notes, intros and wrap-ups ("In summary",
+  "Note that").
+- State the point directly. No "not X but Y" contrasts, no objections or
+  options nobody raised, no consequence tails (", so ...", "This means ...")
+  that restate the sentence.
+- Name the specific thing instead of inflation words (pivotal, seamless,
+  robust, comprehensive).
+- A reply leads with the answer or decision, without rebuilding context the
+  reader has. After a code change it ends with one line on what was not
+  checked.
 - No em dashes.
-- A reply after a code change ends with one line on what was not checked.
 
 ## Copy a user reads
 
