@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Tests for the memory budget (suite-memory.py) and failure reinterpretation.
 
-Run: python3 plugins/suite-kit/suite-check_test.py
+Run it from a directory that also holds the suite-*.py files, as
+.github/workflows/ci.yml does.
 
 Neither section runs a repo's real commands. The three that do would need the
 subprocess mocked, and a test of a mock is a test of nothing; what is covered
@@ -67,8 +68,8 @@ check("the runner declares the memory section", "memory" in runner.SECTIONS, Tru
 
 # ── Line counting ───────────────────────────────────────────────────────────
 # splitlines, not a newline count: a file whose last line has no trailing
-# newline still costs that line. Konnekt's agent_docs/CLAUDE.md is exactly this
-# case, which is why it reads 479 here and 478 to `wc -l`.
+# newline still costs that line, which is why such a file reads one more here
+# than it does to `wc -l`.
 check(
     "final line without a trailing newline still counts",
     len(check_mod.strip_html_comments("a\nb\nc").splitlines()),
@@ -330,19 +331,19 @@ else:
 
     with tempfile.TemporaryDirectory() as tmp:
         # `go test` keeps going into the packages that do compile, so a real
-        # break lands in the same output as the embed miss. Verbatim from
-        # Konnekt with a deliberate error added to backend/services.
+        # break lands in the same output as the embed miss. Real `go test` output
+        # with a deliberate error added to backend/services.
         root = pathlib.Path(tmp)
         git_fixture(root, "frontend/dist/\n")
         both = (
-            "# konnekt\n"
+            "# example\n"
             "main.go:15:12: pattern all:frontend/dist: no matching files found\n"
-            "FAIL\tkonnekt [setup failed]\n"
-            "?   \tkonnekt/backend/models\t[no test files]\n"
-            "# konnekt/backend/services\n"
+            "FAIL\texample [setup failed]\n"
+            "?   \texample/backend/models\t[no test files]\n"
+            "# example/backend/services\n"
             "backend/services/eventbus.go:65:26: undefined: undefinedSymbol\n"
-            "FAIL\tkonnekt/backend/services [build failed]\n"
-            "ok  \tkonnekt/scripts/gen-icons\t(cached)\n"
+            "FAIL\texample/backend/services [build failed]\n"
+            "ok  \texample/scripts/gen-icons\t(cached)\n"
             "FAIL\n"
         )
         check(
@@ -355,7 +356,7 @@ else:
             probe.missing_build_output(
                 "main.go:15:12: pattern all:frontend/dist: no matching files found\n"
                 "--- FAIL: TestThing (0.00s)\n"
-                "FAIL\tkonnekt/backend/services\t0.12s\n",
+                "FAIL\texample/backend/services\t0.12s\n",
                 str(root),
             ),
             None,
@@ -363,11 +364,11 @@ else:
         check(
             "but the miss on its own still reads as build output",
             probe.missing_build_output(
-                "# konnekt\n"
+                "# example\n"
                 "main.go:15:12: pattern all:frontend/dist: no matching files found\n"
-                "FAIL\tkonnekt [setup failed]\n"
-                "?   \tkonnekt/backend/models\t[no test files]\n"
-                "ok  \tkonnekt/backend/services\t6.494s\n"
+                "FAIL\texample [setup failed]\n"
+                "?   \texample/backend/models\t[no test files]\n"
+                "ok  \texample/backend/services\t6.494s\n"
                 "FAIL\n",
                 str(root),
             ),
@@ -424,10 +425,10 @@ with tempfile.TemporaryDirectory() as tmp:
     check("a product's vendored workflow carries the pin", probe.pinned_ruff(str(root)), "0.16.7")
 
 with tempfile.TemporaryDirectory() as tmp:
-    # kollektiv is not a product, so it carries the same steps inline in ci.yml.
+    # A repo without the vendored workflow carries the same steps inline in ci.yml.
     root = pathlib.Path(tmp)
     pin(root, "ci.yml", "0.16.7")
-    check("kollektiv's inline copy is found too", probe.pinned_ruff(str(root)), "0.16.7")
+    check("an inline copy in ci.yml is found too", probe.pinned_ruff(str(root)), "0.16.7")
 
 with tempfile.TemporaryDirectory() as tmp:
     # Two workflows disagreeing is a real problem, but picking one of them would

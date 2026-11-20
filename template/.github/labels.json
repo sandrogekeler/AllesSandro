@@ -29,7 +29,7 @@
     {
       "name": "area:agents",
       "color": "f9e2ae",
-      "description": "suite-kit skills, agents, and Claude Code configuration."
+      "description": "Agent docs, rules and Claude Code configuration."
     },
     {
       "name": "area:build",
