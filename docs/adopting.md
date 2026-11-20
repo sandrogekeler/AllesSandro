@@ -22,7 +22,8 @@ Requires `pipx install copier` (or `pip install copier`), version 9.4 or later.
    - If `claude_action` is on: install the [Claude GitHub App](https://github.com/apps/claude)
      and add `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` as a repo secret.
    - Run the `labels` workflow once (Actions tab, "Run workflow") to create the labels.
-5. Fill in the TODOs in `agent_docs/`.
+5. Fill in the TODOs in `agent_docs/`. `python3 .claude/suite-check.py` fails its
+   "template placeholders" check until none is left.
 
 Or ask Claude in the Master Project: "set up <repo> with AllesSandro".
 

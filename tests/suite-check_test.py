@@ -464,6 +464,27 @@ with tempfile.TemporaryDirectory() as tmp:
     check("an unpinned repo still runs aislop",
           probe.aislop_ruff_gap(AISLOP_RUN, str(root)), None)
 
+# ── Template placeholders are found where an agent reads, and only there ────
+with tempfile.TemporaryDirectory() as tmp:
+    root = pathlib.Path(tmp)
+    write(root, "AGENTS.md", "# Project\n\nTODO: one paragraph on what this is.\n")
+    write(root, "agent_docs/ROADMAP.md", "## Now\n\n- [ ] TODO\n- [ ] Ship the scanner\n")
+    write(root, "agent_docs/HEALTH_CHECKLIST.md", "- [ ] No TODOs without an issue number.\n")
+    write(root, "src/notes.md", "TODO: not an agent doc\n")
+    (result,) = runner.run_placeholders(str(root))
+    check("an unfilled placeholder fails", result.status, runner.FAIL)
+    check(
+        "each one is named by file and line, and a mention is not one",
+        result.details,
+        ["AGENTS.md:3: TODO: one paragraph on what this is.", "agent_docs/ROADMAP.md:3: - [ ] TODO"],
+    )
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = pathlib.Path(tmp)
+    write(root, "agent_docs/ROADMAP.md", "## Now\n\n- [ ] Ship the scanner\n")
+    (result,) = runner.run_placeholders(str(root))
+    check("filled docs pass", result.status, runner.PASS)
+
 # ── Report ─────────────────────────────────────────────────────────────────
 if failures:
     print(f"{len(failures)} failing:\n", file=sys.stderr)
