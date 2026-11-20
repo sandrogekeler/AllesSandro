@@ -12,6 +12,8 @@ paths:
   - ".claude/rules/simplicity.md"
   - ".claude/rules/typography.md"
   - ".claude/rules/template-files.md"
+  - ".claude/rules/working.md"
+  - ".claude/rules/copy.md"
 ---
 
 # Files that come from AllesSandro
@@ -24,7 +26,7 @@ by Renovate (`.copier-answers.yml` records the version). Two kinds of file:
   (CodeQL and Scorecard only on a public repo) and the optional `aislop.yml`,
   `claude.yml`, `.aislop/base.yml`, `.github/scripts/changelog-section.py`,
   `.github/scripts/release-notes.py`,
-  `.claude/rules/{template-files,writing,simplicity,typography}.md`. A local
+  `.claude/rules/{template-files,working,writing,copy,simplicity,typography}.md`. A local
   edit is kept but shows up as a merge conflict on the next template update.
 - **Seeded** (created once, owned by this repo): everything else.
 

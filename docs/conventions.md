@@ -90,21 +90,38 @@ it either way.
 `CLAUDE.md` stays a few lines and imports `agent_docs/CLAUDE.md` (keep under
 ~200 lines, per Claude Code's guidance). Path-specific guidance goes in
 `.claude/rules/*.md` with `paths:` frontmatter so it loads only when relevant.
-`.claude/rules/writing.md` has no `paths:`, so it loads in every session: it
-sets how anything written for a reader reads. Copy users see leaves out how
-things work; developer docs may explain it. `.claude/rules/typography.md`
-loads only with style, markup, font and brand files: it names the fonts and type
-treatments to avoid, and mandates no font.
+
+Three rules have no `paths:` and load in every session:
+
+- `working.md`: how an agent works. Where it finds what is wanted, when it
+  asks, what it never does without a yes, how it reports. A session with nobody
+  watching records its question in the pull request instead of guessing.
+- `writing.md`: how anything written for a reader reads.
+- `simplicity.md`: the code and wording limits below.
+
+`copy.md` holds the rules for copy a user reads, which leaves out how things
+work; developer docs may explain it. It loads with markup, style, component and
+Markdown files, and `working.md` sends an agent to it before writing
+user-facing text in any other file. `typography.md` loads only with style,
+markup, font and brand files: it names the fonts and type treatments to avoid,
+and mandates no font.
+
+Decided work lives in issues. The roadmap holds direction and, under "Ideas",
+what is not decided yet. An agent files a defect it finds as an issue and lists
+an idea under "Follow-ups" in its pull request; it does not add to the roadmap
+on the side.
+
 Anything an agent must always see is a file in the repo, not a plugin:
 declaring a plugin in `.claude/settings.json` does not install it in cloud or
 unattended sessions.
 
-`.claude/rules/simplicity.md` also loads in every session: the code limits (no
+`.claude/rules/simplicity.md` sets the code limits (no
 abstraction with one user, no unused option, no second way, no code without a
 caller, every caller reached, a test for new logic, `shortcut:` comments for
 known limits, and what is never cut for size) and the wording limits (test
-names 60 characters, scanned labels 20, inline messages 140). The numbers are the convention; a project gates them with
-its own tests where it has the surface.
+names 60 characters, scanned labels 20, inline messages 140). The numbers are
+the convention; a project gates them with its own tests where it has the
+surface.
 
 Docs describe what is on disk, in the present tense. Intent goes in the roadmap.
 
