@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/kollektiv-mc/Kollektiv/design/suite.schema.json",
-  "title": "Kollektiv suite manifest",
-  "description": "The per-repo manifest every suite-kit skill reads before doing anything. Product-specific facts live here, next to the code they constrain, rather than inside the plugin — which is what keeps the plugin's skills generic. A skill that cannot find this file says so and stops rather than guessing; this schema exists so that a file which is found is also trustworthy. See docs/adopting.md.",
+  "$id": "https://raw.githubusercontent.com/sandrogekeler/AllesSandro/main/schemas/project.schema.json",
+  "title": "AllesSandro project manifest",
+  "description": "A project's .claude/suite.json, read by .claude/suite-check.py. Facts about one project live here, next to the code they constrain, which keeps the runner generic. See docs/adopting.md.",
   "type": "object",
-  "required": ["product", "kind", "roadmap", "health"],
+  "required": ["product", "kind", "tracking", "roadmap", "health"],
   "additionalProperties": false,
 
   "$defs": {
@@ -32,7 +32,7 @@
         },
         "cwd": {
           "allOf": [{ "$ref": "#/$defs/repoRelativePath" }],
-          "description": "Working directory for this command, relative to the repo root. Defaults to the repo root. This is what lets one ordered list mix toolchains living at different depths — Konnekt runs pnpm from frontend/ and go from the root."
+          "description": "Working directory for this command, relative to the repo root. Defaults to the repo root. This is what lets one ordered list mix toolchains living at different depths: pnpm from frontend/ and go from the root."
         }
       }
     },
@@ -101,14 +101,14 @@
 
     "healthMemory": {
       "type": "object",
-      "description": "A repo over the suite's always-loaded memory budget, holding its own ceiling while it comes down. Omitted by every repo that is inside the budget, which is the normal case: the check runs on every repo whether or not this is declared, because a repo pays the context cost either way and a check a repo opts into is a check a new repo silently lacks.",
+      "description": "A repo over the always-loaded memory budget, holding its own ceiling while it comes down. Omitted by every repo that is inside the budget, which is the normal case: the check runs on every repo whether or not this is declared, because a repo pays the context cost either way and a check a repo opts into is a check a new repo silently lacks.",
       "required": ["maxLines", "reason"],
       "additionalProperties": false,
       "properties": {
         "maxLines": {
           "type": "integer",
           "minimum": 201,
-          "description": "This repo's current ceiling, in lines of always-loaded memory. A ratchet, like the aislop size limits and the coverage floors: it is seeded at what the repo measures today and only ever lowered. The minimum of 201 is what makes the field temporary rather than a permanent licence — a repo that reaches the suite budget can no longer express this key at all and has to delete it."
+          "description": "This repo's current ceiling, in lines of always-loaded memory. A ratchet: it is seeded at what the repo measures today and only ever lowered. The minimum of 201 is what makes the field temporary rather than a permanent licence: a repo that reaches the budget can no longer express this key at all and has to delete it."
         },
         "reason": {
           "type": "string",
@@ -118,19 +118,6 @@
       }
     }
   },
-
-  "oneOf": [
-    {
-      "required": ["linear"],
-      "not": { "required": ["tracking"] },
-      "title": "Tracked in Linear"
-    },
-    {
-      "required": ["tracking"],
-      "not": { "required": ["linear"] },
-      "title": "Tracked outside Linear"
-    }
-  ],
 
   "properties": {
     "$schema": { "type": "string" },
@@ -144,97 +131,24 @@
     "kind": {
       "type": "string",
       "minLength": 1,
-      "description": "Stack shape. Free-form so a fourth product on an unanticipated stack is not a schema change. Known values: 'wails-desktop', 'vite-web', 'workspace-root'."
-    },
-
-    "linear": {
-      "type": "object",
-      "required": ["team"],
-      "additionalProperties": false,
-      "description": "Present when this repo is tracked in Linear directly, bypassing the GitHub-Issues mirror. Exactly one of 'linear' or 'tracking' must be set — tracking is a per-repo choice, and a repo that declares neither would leave /suite-kit:suite-sync guessing where its issues live.",
-      "properties": {
-        "team": {
-          "type": "string",
-          "pattern": "^[A-Z][A-Z0-9]{1,5}$",
-          "description": "Team key, e.g. 'KOL'. A key declared here may not yet be provisioned in the workspace — declaring a key and creating the team are different steps."
-        }
-      }
+      "description": "Stack shape, the `kind` answer in copier.yml. Free-form so a project on an unanticipated stack is not a schema change."
     },
 
     "tracking": {
-      "enum": ["github-issues"],
-      "description": "Present when this repo's issues live on GitHub, which /suite-kit:suite-sync then mirrors into Linear. Every repo in the suite uses this today — GitHub Issues is the one source of truth for work items across the suite."
+      "enum": ["github-issues", "linear"],
+      "description": "Where this repo's work items live, the `tracking` answer in copier.yml."
     },
 
     "roadmap": {
       "allOf": [{ "$ref": "#/$defs/repoRelativePath" }],
-      "description": "Direction and sequencing only — not a work-item list. Work items live in GitHub Issues; /suite-kit:suite-sync mirrors them into Linear, matching on a 'Source: <owner>/<repo>#<number>' line in each Linear issue's description, never on titles."
-    },
-
-    "tokens": {
-      "type": "object",
-      "required": ["role", "source", "sourceFile", "generate", "enforce", "paths"],
-      "additionalProperties": false,
-      "description": "Omitted by the workspace root, which authors the token set as raw data rather than styled application code.",
-      "properties": {
-        "role": {
-          "enum": ["consumer"],
-          "description": "Always 'consumer' in a repo carrying this file. The set is defined in kollektiv's design/tokens.json and nowhere else — a repo that both produced and consumed it is the round trip that makes regeneration unsafe."
-        },
-        "source": {
-          "enum": ["kollektiv"],
-          "description": "The repo the values come from."
-        },
-        "sourceFile": {
-          "allOf": [{ "$ref": "#/$defs/repoRelativePath" }],
-          "description": "The vendored copy of that source, conventionally 'tokens.source.json'. Vendored rather than referenced so a product builds from a standalone clone. Editing it directly is a mistake: the next sync-tokens.sh overwrites it and the other product never sees the value."
-        },
-        "generate": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Command that regenerates this repo's token output from the vendored source."
-        },
-        "enforce": {
-          "enum": ["strict", "migrating"],
-          "description": "'strict' — a literal hex or arbitrary px in the covered paths is a failure. 'migrating' — pre-existing matches are expected and reported, not mass-rewritten, while new code is held to strict."
-        },
-        "paths": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/$defs/repoRelativePath" },
-          "description": "Paths the no-literals rule covers."
-        }
-      }
-    },
-
-    "minecraft": {
-      "type": "object",
-      "required": ["targetVersion", "dataSource", "traitMatrix"],
-      "additionalProperties": false,
-      "description": "Omitted by a repo that emits no Minecraft commands.",
-      "properties": {
-        "targetVersion": {
-          "type": "string",
-          "pattern": "^1\\.[0-9]+(\\.[0-9]+)?$",
-          "description": "The version this repo emits for."
-        },
-        "dataSource": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Where pinned registry data comes from, including how it is pinned. Pin by tag, never by branch — a branch makes a reproducible build a moving target."
-        },
-        "traitMatrix": {
-          "allOf": [{ "$ref": "#/$defs/repoRelativePath" }],
-          "description": "The version-trait document. Serializers branch on a named trait from this matrix and never compare version strings."
-        }
-      }
+      "description": "Direction and sequencing only, not a work-item list. Work items live in the issue tracker."
     },
 
     "health": {
       "type": "object",
       "required": ["commands"],
       "additionalProperties": false,
-      "description": "What this repo's health means. /suite-kit:health runs every entry and does not stop at the first failure.",
+      "description": "What this repo's health means. suite-check.py runs every entry and does not stop at the first failure.",
       "properties": {
         "commands": {
           "type": "array",
@@ -254,7 +168,7 @@
         },
         "memory": {
           "allOf": [{ "$ref": "#/$defs/healthMemory" }],
-          "description": "Declared only by a repo over the always-loaded memory budget. See docs/conventions.md § The agent memory budget."
+          "description": "Declared only by a repo over the always-loaded memory budget. See docs/conventions.md § Agent files."
         }
       }
     }

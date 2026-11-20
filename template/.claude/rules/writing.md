@@ -26,9 +26,9 @@ explain how a part works and why.
 - Say what something does, not why the system works that way. Explain a reason
   only when asked or when the reader would otherwise get it wrong.
 - A feature says what the user can do with it. Leave out how it works, numbers
-  and limits, where it shows up, and anything a user expects anyway: "Ping:
-  Mark a spot for everyone", not "A mark everyone sees for 5 s. Follows a
-  moving contraption".
+  and limits, where it shows up, and anything a user expects anyway:
+  "Export: Save the report as a PDF", not "Renders the report to an A4 PDF in
+  under 2 s. Works with long tables".
 - A label names the thing. No code glyphs or accent colour on a label, and no
   single word in a headline coloured for emphasis.
 - A headline says what is there, not a slogan: "Scheduler", not "Automate

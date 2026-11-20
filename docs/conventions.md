@@ -4,8 +4,7 @@
 
 Anything every project should have, the same way: workflows, the label gate,
 agent-doc skeletons, Claude Code settings floor, the health runner. Anything
-true of one project or one product family belongs in that project (or in
-Kollektiv for the Minecraft suite). If a locked file needs to differ between
+true of one project or one product family belongs in that project. If a locked file needs to differ between
 projects, it becomes a question in `copier.yml` or moves to the seeded tier.
 
 ## Labels

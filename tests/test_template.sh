@@ -106,6 +106,11 @@ check_project "$WORK/out/jvm"
 [ "$(grep -c 'language: java-kotlin' "$WORK/out/jvm/.github/workflows/codeql.yml")" = 1 ] || fail "java and kotlin both add a codeql row"
 echo "ok  matrix"
 
+echo "== tracked in Linear"
+render linear -d kind=other -d tracking=linear
+check_project "$WORK/out/linear"
+echo "ok  linear"
+
 echo "== private repo, other default branch"
 render private -d kind=static-site -d public=false -d default_branch=master
 check_project "$WORK/out/private"

@@ -42,7 +42,3 @@ schemas/              JSON schema for each project's .claude/suite.json
 tests/                template render + update tests (run in CI)
 ```
 
-The health-check runner (`template/.claude/suite-*.py`), the release-notes
-generator and its Changelog-section parser came from kollektiv-mc/Kollektiv's
-suite-kit, byte for byte. Kollektiv
-keeps the Minecraft-suite specifics (design tokens, label overlay, mc skills).

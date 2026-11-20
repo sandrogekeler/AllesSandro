@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Run a repo's health checks from its .claude/suite.json.
 
-This is the mechanical half of /suite-kit:health. It exists because the plugin
-half does not reach every environment: declaring a plugin in .claude/settings.json
-does not install it, so a cloud container or an unattended agent has no
-/suite-kit:health, and .claude/suite.json is read by nothing. Vendoring this file
-into each product — the same way tokens.source.json is vendored — puts the checks
-back within reach of a bare clone. See docs/adopting.md.
+This is the mechanical half of a health review; agent_docs/HEALTH_CHECKLIST.md
+is the half that needs judgement. It is a file in the repo rather than a plugin
+because declaring a plugin in .claude/settings.json does not install it, so a
+cloud container or an unattended agent would have nothing to run. Vendoring this
+file into each project puts the checks within reach of a bare clone. See
+docs/adopting.md.
 
-The skill still owns judgement. This file owns running things and, above all,
-telling the difference between a check that passed and a check that never ran.
+This file owns running things and, above all, telling the difference between a
+check that passed and a check that never ran.
 
-  --json               Machine-readable report, for the skill to judge against.
+  --json               Machine-readable report.
   --section NAME       Run only these sections. Repeatable.
   --require-runnable   Treat every skip as a failure.
   --offline            Skip anything declaring requiresNetwork, without probing.
@@ -57,8 +57,8 @@ def load_sibling(stem):
 probe = load_sibling("suite-probe")
 if probe is None:
     print(
-        "suite-probe.py is not vendored beside this file — re-run"
-        " kollektiv/scripts/sync-runner.sh",
+        "suite-probe.py is not vendored beside this file — re-apply the"
+        " AllesSandro template (copier update)",
         file=sys.stderr,
     )
     raise SystemExit(2)
@@ -94,14 +94,13 @@ class Result:
 def load_manifest(root):
     """Read .claude/suite.json, or explain why we cannot and stop.
 
-    Every suite-kit skill opens by reading this file and stops if it is missing,
-    rather than guessing a set of checks. A runner that invented its own checks
-    when the manifest was absent would be worse than useless: it would report on
-    a repo whose rules it had made up.
+    Without it the runner stops rather than guessing a set of checks. A runner
+    that invented its own checks when the manifest was absent would be worse
+    than useless: it would report on a repo whose rules it had made up.
     """
     path = os.path.join(root, ".claude", "suite.json")
     if not os.path.isfile(path):
-        return None, f"no .claude/suite.json at {root} — see kollektiv/docs/adopting.md"
+        return None, f"no .claude/suite.json at {root} — see AllesSandro's docs/adopting.md"
     try:
         with open(path, encoding="utf-8") as handle:
             return json.load(handle), None
@@ -206,8 +205,8 @@ def run_invariants(root, entries):
 
         # The defect this runner was written to remove: a grep over a path that
         # does not exist finds nothing, and 'found nothing' is indistinguishable
-        # from 'passed' unless something says so out loud. Kommands has no src/
-        # yet, so all three of its invariants land here.
+        # from 'passed' unless something says so out loud. A repo with no src/
+        # yet lands every one of its invariants here.
         if not present:
             results.append(
                 Result(
