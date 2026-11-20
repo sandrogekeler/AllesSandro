@@ -28,7 +28,7 @@ import re
 import subprocess
 import sys
 
-SECTIONS = ("commands", "invariants", "generated", "memory")
+SECTIONS = ("commands", "invariants", "generated", "memory", "placeholders")
 
 PASS, FAIL, SKIP = "pass", "fail", "skip"
 
@@ -349,8 +349,8 @@ def run_generated(root, entries, offline):
 def run_memory(root, config):
     """The always-loaded agent memory budget, from the module beside this file.
 
-    Vendored as a trio by sync-runner.sh. A product carrying some of it and not
-    the rest has a stale vendoring: a skip with a reason, never a crash and never
+    The three suite-*.py files arrive together. A project carrying some of them
+    and not the rest has a stale vendoring: a skip with a reason, never a crash and never
     a pass.
     """
     name = "always-loaded memory"
@@ -362,6 +362,56 @@ def run_memory(root, config):
             )
         ]
     return [Result("memory", name, *module.evaluate(root, config))]
+
+
+# What the template writes where a project has to supply its own text: a line
+# that opens with TODO, bare or as a list or checklist item. Prose that merely
+# mentions TODOs does not open with one.
+PLACEHOLDER = re.compile(r"^\s*(?:[-*] (?:\[ \] )?)?TODO\b")
+
+
+def run_placeholders(root):
+    """Template placeholders nobody filled in, in the docs an agent is sent to.
+
+    A seeded doc is created once and never updated, so a placeholder left in it
+    stays until someone writes the text. An agent reading "TODO: the rules a
+    change must not break" has been told nothing, and an unfilled checklist reads
+    as a finished one. Not configurable: a repo that has nothing to say in a
+    section says so in a sentence.
+    """
+    paths = [name for name in sorted(os.listdir(root)) if name.endswith(".md")]
+    for dirpath, _, names in os.walk(os.path.join(root, "agent_docs")):
+        paths += [
+            os.path.relpath(os.path.join(dirpath, name), root)
+            for name in sorted(names)
+            if name.endswith(".md")
+        ]
+
+    found = []
+    for rel in paths:
+        try:
+            with open(os.path.join(root, rel), encoding="utf-8") as handle:
+                lines = handle.read().splitlines()
+        except OSError:
+            continue
+        found += [
+            f"{rel.replace(os.sep, '/')}:{number}: {line.strip()}"
+            for number, line in enumerate(lines, 1)
+            if PLACEHOLDER.match(line)
+        ]
+
+    name = "template placeholders"
+    if found:
+        return [
+            Result(
+                "placeholders",
+                name,
+                FAIL,
+                f"{len(found)} unfilled placeholder(s) in the agent docs",
+                found,
+            )
+        ]
+    return [Result("placeholders", name, PASS)]
 
 
 # --- reporting ------------------------------------------------------------
@@ -411,6 +461,8 @@ def main():
         results += run_generated(root, health.get("generated", []), args.offline)
     if "memory" in wanted:
         results += run_memory(root, health.get("memory"))
+    if "placeholders" in wanted:
+        results += run_placeholders(root)
 
     failed = [r for r in results if r.status == FAIL]
     skipped = [r for r in results if r.status == SKIP]
