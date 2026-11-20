@@ -41,7 +41,9 @@ check_project() { # dir
   if grep -rn '{{\|{%' "$d" --include='*.md' --include='*.yml' --include='*.json' | grep -v 'workflows/' | grep -q .; then
     grep -rn '{{\|{%' "$d" --include='*.md' --include='*.yml' --include='*.json' | grep -v 'workflows/'; fail "$d has unrendered jinja"
   fi
-  [ "$(wc -l < "$d/agent_docs/CLAUDE.md")" -lt 200 ] || fail "$d agent_docs/CLAUDE.md is over 200 lines"
+  [ "$(cat "$d/CLAUDE.md")" = "@AGENTS.md" ] || fail "$d CLAUDE.md does not import AGENTS.md"
+  grep -qx '@./AGENTS.md' "$d/GEMINI.md" || fail "$d GEMINI.md does not import AGENTS.md"
+  (cd "$d" && python3 -I .claude/suite-check.py --section memory >/dev/null) || fail "$d always-loaded memory is over budget"
 }
 
 echo "== render every kind"

@@ -16,7 +16,9 @@ _templates_suffix: .jinja
 # local edit to a locked file surfaces as a merge conflict (docs/updating.md).
 _skip_if_exists:
   - README.md
+  - AGENTS.md
   - CLAUDE.md
+  - GEMINI.md
   - CONTRIBUTING.md
   - SECURITY.md
   - LICENSE
