@@ -59,3 +59,17 @@ file seeded for everyone.
 Dependabot bumps action SHAs in locked workflows too. That is fine: the next
 template update merges cleanly unless AllesSandro changed the same line. Keep
 the pins here current so that is rare.
+
+## Moving a project to `AGENTS.md`
+
+The update that introduces `AGENTS.md` deletes the project's
+`agent_docs/CLAUDE.md` and adds an unfilled `AGENTS.md` and a `GEMINI.md`. Do
+not merge that update PR as it arrives. On its branch:
+
+1. Restore the old file as the new one:
+   `git checkout origin/<default branch> -- agent_docs/CLAUDE.md && git mv -f agent_docs/CLAUDE.md AGENTS.md`.
+2. Move any project text from `CLAUDE.md` into `AGENTS.md` and replace
+   `CLAUDE.md` with the single line `@AGENTS.md`.
+3. Add the pointer to `.claude/rules/` from the template's `AGENTS.md` and fix
+   links to `agent_docs/CLAUDE.md`.
+4. Run `python3 .claude/suite-check.py`.

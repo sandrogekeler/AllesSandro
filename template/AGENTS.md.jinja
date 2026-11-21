@@ -3,9 +3,13 @@
 {{ description or 'TODO: one paragraph on what this project is and who it is for.' }}
 
 <!-- Project-owned. Seeded once from sandrogekeler/AllesSandro; rewrite freely.
-Keep it under ~200 lines: it is imported into every session by ../CLAUDE.md.
-Put rules that only matter for some files in .claude/rules/ with `paths:`
-frontmatter instead, so they load only when those files are touched. -->
+The one agent file: Codex reads it directly, CLAUDE.md and GEMINI.md import it.
+Keep it under ~200 lines, since it loads into every session. Put rules that
+only matter for some files in .claude/rules/ with `paths:` frontmatter. -->
+
+Rules shared with other projects are in `.claude/rules/`. An agent that does
+not load that directory itself reads `working.md`, `writing.md` and
+`simplicity.md` there before starting.
 
 ## Stack
 
@@ -28,7 +32,8 @@ frontmatter instead, so they load only when those files are touched. -->
 
 ## Project structure
 
-TODO: the top-level directories and what lives in each.
+TODO: what the layout does not show: where each kind of change goes and what
+is generated.
 
 ## Architecture rules
 
@@ -55,6 +60,9 @@ python3 -m pytest -q
 {%- endif %}
 python3 .claude/suite-check.py   # every health check in .claude/suite.json
 ```
+
+Run the last one before calling a task done. A check it reports as skipped did
+not pass.
 
 ## Task tracking
 
@@ -89,3 +97,4 @@ Check before writing it down.
 
 - Commit secrets, `.env` files or credentials.
 - Edit generated files or lockfiles by hand; regenerate them.
+- Add a dependency without reading `agent_docs/DEPENDENCIES.md`.

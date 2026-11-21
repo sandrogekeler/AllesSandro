@@ -87,8 +87,13 @@ it either way.
 
 ## Agent files
 
-`CLAUDE.md` stays a few lines and imports `agent_docs/CLAUDE.md` (keep under
-~200 lines, per Claude Code's guidance). Path-specific guidance goes in
+`AGENTS.md` at the repo root is the one agent file: what the project is, its
+structure, rules and commands (keep under ~200 lines, per Claude Code's
+guidance). Codex reads it directly. `CLAUDE.md` is the single line
+`@AGENTS.md`, and `GEMINI.md` imports it together with the three always-loaded
+rules below, because only Claude Code loads `.claude/rules/` by itself.
+`AGENTS.md` tells any other agent to read those three first. Project text goes
+in `AGENTS.md`, never in the other two. Path-specific guidance goes in
 `.claude/rules/*.md` with `paths:` frontmatter so it loads only when relevant.
 
 Three rules have no `paths:` and load in every session:
