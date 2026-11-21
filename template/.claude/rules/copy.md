@@ -17,8 +17,9 @@ explain how a part works and why.
   and limits, where it shows up, and anything a user expects anyway:
   "Export: Save the report as a PDF", not "Renders the report to an A4 PDF in
   under 2 s. Works with long tables".
-- A label names the thing. No code glyphs or accent colour on a label, and no
-  single word in a headline coloured for emphasis.
+- A label names the thing. No code glyphs or accent colour on a label
+  (`[i] about`, `>_ features`), and no single word in a headline coloured
+  for emphasis.
 - A headline says what is there, not a slogan: "Scheduler", not "Automate
   everything".
 - No line that explains the layout: no subtitle beside a heading, no sentence
@@ -29,5 +30,6 @@ explain how a part works and why.
 - A header fact's label is a plain noun, its value a number and unit: "Duration
   ~20 min", not "Takes about twenty minutes". The same fact carries the same
   label on every page.
-- One sentence per line in prose. A line that wraps to leave one or two words
-  gets a shorter sentence, not a wider box.
+- One sentence per line in prose, and no sentence starts on the tail of the
+  one before. A line that wraps to leave one or two words gets a shorter
+  sentence, not a wider box.

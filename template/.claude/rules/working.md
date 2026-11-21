@@ -12,8 +12,8 @@
 - With nobody there to answer, write the question in the pull request and
   build only what it leaves open.
 - Never without a yes: push to the default branch, tag, release, delete a
-  branch or data, change repo settings or secrets, send anything outside
-  the repo, spend money.
+  branch or data, change repo settings, labels or secrets, send anything
+  outside the repo, spend money.
 - A change across several parts of the code starts with a short plan.
 - Open pull requests as drafts. Mark one ready when its checks pass.
 - A defect found on the way becomes an issue. An idea goes under
