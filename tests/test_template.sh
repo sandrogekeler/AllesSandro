@@ -53,10 +53,16 @@ for kind in wails-desktop vite-web android-app go-service python-service static-
   echo "ok  $kind"
 done
 
+echo "== release notes ship with their tests"
+for f in .github/scripts/release-notes_test.py .github/release.yml; do
+  [ -f "$WORK/out/wails-desktop/$f" ] || fail "wails-desktop has no $f"
+done
+python3 -I "$WORK/out/wails-desktop/.github/scripts/release-notes_test.py" >/dev/null || fail "release-notes_test.py fails in a rendered project"
+
 echo "== optional parts switch off"
 render bare -d kind=other -d aislop=false -d claude_action=false -d release_notes=false
 check_project "$WORK/out/bare"
-for f in .github/workflows/aislop.yml .github/workflows/claude.yml .aislop .aislopignore .github/scripts/release-notes.py .github/changelog.json; do
+for f in .github/workflows/aislop.yml .github/workflows/claude.yml .aislop .aislopignore .github/scripts/release-notes.py .github/scripts/release-notes_test.py .github/release.yml .github/changelog.json; do
   [ ! -e "$WORK/out/bare/$f" ] || fail "bare should not have $f"
 done
 # The gate reads a Changelog section with this parser whether or not the
