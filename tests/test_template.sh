@@ -113,6 +113,13 @@ render jvm -d kind=other -d 'languages=[java, kotlin]'
 check_project "$WORK/out/jvm"
 [ "$(grep -c 'package-ecosystem: gradle' "$WORK/out/jvm/.github/dependabot.yml")" = 1 ] || fail "java and kotlin both add a gradle entry"
 [ "$(grep -c 'language: java-kotlin' "$WORK/out/jvm/.github/workflows/codeql.yml")" = 1 ] || fail "java and kotlin both add a codeql row"
+render rust -d kind=other -d 'languages=[rust]'
+check_project "$WORK/out/rust"
+grep -q 'language: rust' "$WORK/out/rust/.github/workflows/codeql.yml" || fail "rust missing from codeql"
+grep -q 'package-ecosystem: cargo' "$WORK/out/rust/.github/dependabot.yml" || fail "cargo dependabot missing"
+grep -q 'cargo clippy' "$WORK/out/rust/.claude/suite.json" || fail "cargo health checks missing"
+grep -q '^target/$' "$WORK/out/rust/.gitignore" || fail "target/ not ignored"
+if grep -q 'cargo' "$WORK/out/go-service/.claude/suite.json"; then fail "go-service runs cargo"; fi
 echo "ok  matrix"
 
 echo "== tracked in Linear"
