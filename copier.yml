@@ -84,6 +84,7 @@ languages:
     Python: python
     Java (Gradle): java
     Kotlin (Gradle): kotlin
+    Rust (Cargo): rust
   default: >-
     {%- if kind == 'wails-desktop' -%}[go, typescript]
     {%- elif kind in ['vite-web', 'static-site'] -%}[typescript]

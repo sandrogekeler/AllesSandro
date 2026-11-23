@@ -56,6 +56,10 @@ jobs:
           - language: java-kotlin
             build-mode: none
 {%- endif %}
+{%- if 'rust' in languages %}
+          - language: rust
+            build-mode: none
+{%- endif %}
           # The vendored .claude/ runner is Python, so Python is always scanned.
           - language: python
             build-mode: none

@@ -28,6 +28,9 @@ not load that directory itself reads `working.md`, `writing.md` and
 {%- if 'kotlin' in languages %}
 - Kotlin, Gradle (Kotlin DSL, versions in `gradle/libs.versions.toml`)
 {%- endif %}
+{%- if 'rust' in languages %}
+- Rust, Cargo (`Cargo.toml` at the repo root)
+{%- endif %}
 - TODO: frameworks and versions that matter
 
 ## Project structure
@@ -57,6 +60,9 @@ python3 -m pytest -q
 {%- endif %}
 {%- if ('java' in languages or 'kotlin' in languages) %}
 ./gradlew build
+{%- endif %}
+{%- if 'rust' in languages %}
+cargo fmt --all && cargo clippy --all-targets && cargo test
 {%- endif %}
 python3 .claude/suite-check.py   # every health check in .claude/suite.json
 ```

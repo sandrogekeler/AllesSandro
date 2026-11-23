@@ -12,6 +12,10 @@ paths:
   - "pyproject.toml"
   - "requirements*.txt"
 {%- endif %}
+{%- if 'rust' in languages %}
+  - "**/Cargo.toml"
+  - "Cargo.lock"
+{%- endif %}
 {%- if ('java' in languages or 'kotlin' in languages) %}
   - "**/build.gradle"
   - "**/build.gradle.kts"
